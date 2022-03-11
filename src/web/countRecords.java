@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cross.domain.request.servletCOR;
 import database.connectDB;
 import database.dbCredentials;
 
@@ -24,7 +23,6 @@ public class countRecords extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		servletCOR.setAccessControlHeaders(res);
 		String query = null;
 		PrintWriter out = res.getWriter();
 		

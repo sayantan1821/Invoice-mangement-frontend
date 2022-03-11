@@ -27,9 +27,7 @@ public class SearchRecord extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-//		servletCOR.setAccessControlHeaders(res);
-//		res.setHeader("Access-Control-Allow-Origin", "*");
-//	    res.setHeader("Access-Control-Allow-Methods", "GET");
+
 //		int sl_no = Integer.parseInt(req.getParameter("sl_no")); 
 		String sl_par = req.getParameter("sl_no");
 		int sl_no = -1;

@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import cross.domain.request.servletCOR;
 import database.connectDB;
 import database.dbCredentials;
 
@@ -27,7 +26,6 @@ public class advanceSearchRecord extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		servletCOR.setAccessControlHeaders(res);
 		String doc_id = req.getParameter("doc_id");
 		String cust_number = req.getParameter("cust_number");
 		String buisness_year = req.getParameter("buisness_year");

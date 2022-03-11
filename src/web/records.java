@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import cross.domain.request.servletCOR;
 import database.connectDB;
 import database.dbCredentials;
 
@@ -26,7 +25,6 @@ public class records extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		servletCOR.setAccessControlHeaders(res);
 		PrintWriter out = res.getWriter(); 
 		int pageNo = Integer.parseInt(req.getParameter("pageNo"));
 		int recordsPerPage = Integer.parseInt(req.getParameter("recordsPerPage"));

@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import cross.domain.request.servletCOR;
 import database.connectDB;
 import database.dbCredentials;
 import database.isExist;
@@ -26,7 +25,7 @@ public class updateRecord extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
-		servletCOR.setAccessControlHeaders(res);
+
 		int sl_no = Integer.parseInt(req.getParameter("sl_no"));
 		String cust_payment_terms = req.getParameter("cust_payment_terms");
 		float total_open_amount = Float.parseFloat(req.getParameter("total_open_amount"));
