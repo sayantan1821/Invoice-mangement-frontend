@@ -66,8 +66,7 @@ public class advanceSearchRecord extends HttpServlet {
 				query2 = "SELECT " + columns + " FROM " + dbCredentials.getTableName() + " LEFT JOIN `business` ON `winter_internship`.`business_code` = `business`.`business_code` LEFT JOIN `customer` ON `winter_internship`.`cust_number` = `customer`.`cust_number` WHERE (" + doc_id
 						+ " IS NULL OR doc_id = "
 						+ doc_id + ") AND (" + cust_number + " IS NULL OR winter_internship.cust_number = " + cust_number + ") AND (" + invoice_id + " IS NULL OR winter_internship.invoice_id = " + invoice_id + ") AND ("
-						+ buisness_year + " IS NULL OR buisness_year = " + buisness_year + ") LIMIT " + startIndex
-						+ ", " + recordsPerPage;
+						+ buisness_year + " IS NULL OR buisness_year = " + buisness_year + ") AND winter_internship.is_deleted = 0 LIMIT " + startIndex+ ", " + recordsPerPage;
 
 				ResultSet rs2 = st.executeQuery(query2);
 

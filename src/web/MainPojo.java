@@ -28,6 +28,7 @@ public class MainPojo {
 	private int isOpen;
 	private String aging_Bucket = "";
 	private String is_deleted;
+	private String predicted;
 	
 //	private String columns = "sl_no, business_code, cust_number, clear_date, business_year, doc_id, posting_date, " +
 //								"document_create_date, document_create_date1, due_in_date, invoice_currency, "+
@@ -175,6 +176,12 @@ public class MainPojo {
 //	public String getColumns() {
 //		return columns;
 //	}
+	public String getPredicted() {
+		return predicted;
+	}
+	public void setPredicted(String predicted) {
+		this.predicted = predicted;
+	}
 	
 	
 }

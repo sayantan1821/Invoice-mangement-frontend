@@ -29,13 +29,11 @@ public class records extends HttpServlet {
 		int pageNo = Integer.parseInt(req.getParameter("pageNo"));
 		int recordsPerPage = Integer.parseInt(req.getParameter("recordsPerPage"));
 		int startIndex = pageNo * recordsPerPage;
-		int endIndex = pageNo * recordsPerPage + recordsPerPage;
 		String columns = "winter_internship.sl_no, winter_internship.business_code, business.business_name, winter_internship.cust_number, customer.name_customer, winter_internship.clear_date, winter_internship.buisness_year, winter_internship.doc_id, winter_internship.posting_date, winter_internship.document_create_date, winter_internship.document_create_date1, winter_internship.due_in_date, winter_internship.invoice_currency, winter_internship.document_type, winter_internship.posting_id, winter_internship.area_business, winter_internship.total_open_amount, winter_internship.baseline_create_date, winter_internship.cust_payment_terms, winter_internship.invoice_id, winter_internship.isOpen, winter_internship.aging_Bucket, winter_internship.is_deleted";
 		// System.out.println(startIndex + "-" +endIndex);
 
 		String query = "select "+columns+" from " + dbCredentials.getTableName()
-				+ " LEFT JOIN `business` ON `winter_internship`.`business_code` = `business`.`business_code` LEFT JOIN `customer` ON `winter_internship`.`cust_number` = `customer`.`cust_number` WHERE sl_no BETWEEN " + startIndex + " AND "
-				+ endIndex + "";
+				+ " LEFT JOIN `business` ON `winter_internship`.`business_code` = `business`.`business_code` LEFT JOIN `customer` ON `winter_internship`.`cust_number` = `customer`.`cust_number` WHERE winter_internship.is_deleted = 0 LIMIT " + startIndex +  ", " + recordsPerPage;
 
 		ArrayList<MainPojo> pojoArray = new ArrayList<MainPojo>();
 		try {
