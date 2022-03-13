@@ -12,7 +12,7 @@ public class isExist {
 		ResultSet rs = null;
 		String query = "SELECT EXISTS(SELECT * FROM "
 						+dbCredentials.getTableName()
-						+" WHERE sl_no = "+sl_no+")";
+						+" WHERE sl_no = "+sl_no+" AND is_deleted = 0  )";
 		try {
 			st = con.createStatement();
 			rs = st.executeQuery(query);
@@ -32,7 +32,7 @@ public class isExist {
 		String query = "SELECT EXISTS(SELECT * FROM "
 						+dbCredentials.getTableName()
 						+" WHERE sl_no="+sl_no+" AND doc_id= "
-						+doc_id+")";
+						+doc_id+" AND is_deleted = 0)";
 		try {
 			st = con.createStatement();
 			rs = st.executeQuery(query);
@@ -51,7 +51,7 @@ public class isExist {
 		ResultSet rs = null;
 		String query = "SELECT EXISTS(SELECT * FROM "
 						+dbCredentials.getTableName()
-						+" WHERE cust_number="+cust_number+")";
+						+" WHERE cust_number="+cust_number+" AND is_deleted = 0)";
 		try {
 			st = con.createStatement();
 			rs = st.executeQuery(query);

@@ -22,7 +22,7 @@ public class RestoreData extends HttpServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		PrintWriter out = res.getWriter();
-		String columns = "winter_internship.sl_no";
+		String columns = "winter_internship.sl_no, winter_internship.business_code, winter_internship.cust_number, winter_internship.clear_date, winter_internship.buisness_year, winter_internship.doc_id, winter_internship.posting_date, winter_internship.document_create_date, winter_internship.document_create_date1, winter_internship.due_in_date, winter_internship.invoice_currency, winter_internship.document_type, winter_internship.posting_id, winter_internship.area_business, winter_internship.total_open_amount, winter_internship.baseline_create_date, winter_internship.cust_payment_terms, winter_internship.invoice_id, winter_internship.isOpen, winter_internship.aging_Bucket, winter_internship.is_deleted";
 		try {
 			
 				Connection con = connectDB.getConnection();
@@ -31,20 +31,23 @@ public class RestoreData extends HttpServlet {
 				Statement st = null;
 				
 				String query1 = "SELECT "+columns+" FROM `winter_internship` WHERE is_deleted = 1";
-				
+				String query2 = "UPDATE `grey_goose`.`winter_internship` SET `is_deleted` = '0' WHERE is_deleted = 1";
 				st = con.createStatement();
-				rs1 = st.executeQuery(query1);
+				st.executeUpdate(query2);
 				
-				while(rs1.next()) {
-					String sl_no = rs1.getString("sl_no");
-					System.out.println(sl_no);
-					Statement st2 = con.createStatement();
-					
-					String query2 = "UPDATE "+dbCredentials.getTableName()+" SET winter_internship.is_deleted = 0 WHERE winter_internship.sl_no = " + sl_no + "";
-					PreparedStatement pst = con.prepareStatement(query2);
-					pst.executeUpdate();
-					out.println("Record restore sl_no : " + sl_no);
-				}
+//				while(rs1.next()) {
+//					String sl_no = rs1.getString("sl_no");
+//					System.out.println(sl_no);
+//					Statement st2 = con.createStatement();
+//					
+//					
+////					PreparedStatement pst = con.prepareStatement(query2);
+////					pst.setString(1, "0");
+////					pst.setString(2, sl_no);
+////					int r = pst.executeUpdate();
+//					st2.execute(query2);
+//					out.println("Record restore sl_no : " + sl_no +" ");
+//				}
 //				if(endIndex <= pojoArray.size()) {
 //					List<MainPojo> subPojoArray = pojoArray.subList(startIndex, endIndex);
 //					jsonData = gs.toJson(subPojoArray);

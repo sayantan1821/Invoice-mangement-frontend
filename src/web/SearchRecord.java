@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import cross.domain.request.servletCOR;
 import database.connectDB;
 import database.dbCredentials;
 import database.isExist;
@@ -51,10 +50,10 @@ public class SearchRecord extends HttpServlet {
 				
 				if(search_by_cust_number != null) {
 					query = "select "+columns+" from "+dbCredentials.getTableName()
-								+" LEFT JOIN `business` ON `winter_internship`.`business_code` = `business`.`business_code` LEFT JOIN `customer` ON `winter_internship`.`cust_number` = `customer`.`cust_number` where winter_internship.cust_number = " + cust_number + " LIMIT " + startIndex + ", " + recordsPerPage;
+								+" LEFT JOIN `business` ON `winter_internship`.`business_code` = `business`.`business_code` LEFT JOIN `customer` ON `winter_internship`.`cust_number` = `customer`.`cust_number` where winter_internship.cust_number = " + cust_number + " AND is_deleted = 0  LIMIT " + startIndex + ", " + recordsPerPage;
 				} else {
 					query = "select "+columns+" from "+dbCredentials.getTableName()
-					+" LEFT JOIN `business` ON `winter_internship`.`business_code` = `business`.`business_code` LEFT JOIN `customer` ON `winter_internship`.`cust_number` = `customer`.`cust_number` where sl_no = " + sl_no;
+					+" LEFT JOIN `business` ON `winter_internship`.`business_code` = `business`.`business_code` LEFT JOIN `customer` ON `winter_internship`.`cust_number` = `customer`.`cust_number` where sl_no = " + sl_no + " AND is_deleted = 0  LIMIT " + startIndex + ", " + recordsPerPage;
 				}
 				
 				
@@ -95,10 +94,6 @@ public class SearchRecord extends HttpServlet {
 				GsonBuilder gb = new GsonBuilder();
 		        Gson gs = gb.create();
 		        String jsonData = gs.toJson(pojoArray);
-//				if(endIndex <= pojoArray.size()) {
-//					List<MainPojo> subPojoArray = pojoArray.subList(startIndex, endIndex);
-//					jsonData = gs.toJson(subPojoArray);
-//				} else jsonData = gs.toJson(pojoArray);
 				res.setContentType("application/json");
 				res.setCharacterEncoding("UTF-8");
 				
@@ -118,7 +113,6 @@ public class SearchRecord extends HttpServlet {
 		out.close();
 	}
 	public void doPost(HttpServletRequest req, HttpServletResponse res) {
-		servletCOR.setAccessControlHeaders(res);
 		try {
 			doGet(req, res);
 		} catch (Exception e) {
