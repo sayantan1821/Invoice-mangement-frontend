@@ -27,8 +27,8 @@ public class updateRecord extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 
 		int sl_no = Integer.parseInt(req.getParameter("sl_no"));
+		String invoice_currency = req.getParameter("invoice_currency");
 		String cust_payment_terms = req.getParameter("cust_payment_terms");
-		float total_open_amount = Float.parseFloat(req.getParameter("total_open_amount"));
 		String query = null;
 		
 		PrintWriter out = res.getWriter();
@@ -37,12 +37,12 @@ public class updateRecord extends HttpServlet {
 				Connection con = connectDB.getConnection();
 				query = "UPDATE "+dbCredentials.getTableName()
 								+" SET `cust_payment_terms` = ?,"
-								+" `total_open_amount`=? WHERE sl_no=?";
+								+" `invoice_currency`=? WHERE sl_no=?";
 				PreparedStatement pst = con.prepareStatement(query);
 				
 				
 				pst.setString(1, cust_payment_terms);
-				pst.setFloat(2, total_open_amount);
+				pst.setString(2, invoice_currency);
 				pst.setInt(3, sl_no);
 				
 				pst.executeUpdate();
@@ -52,7 +52,6 @@ public class updateRecord extends HttpServlet {
 				
 				con.close();
 				pst.close();
-//				res.sendRedirect("recordById");
 			} else {
 				out.print("Record does not exist");
 			}

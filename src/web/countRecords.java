@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import database.connectDB;
 import database.dbCredentials;
-
+ 
 @WebServlet("/api/count")
 public class countRecords extends HttpServlet {
 	/**

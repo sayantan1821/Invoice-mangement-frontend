@@ -29,9 +29,10 @@ public class removeFromView extends HttpServlet {
 			try {
 				if(isExist.ifDataExistsById(Integer.parseInt(sl_no))) {
 					Connection con = connectDB.getConnection();
-					String query = "UPDATE "+dbCredentials.getTableName()+" SET winter_internship.is_deleted = '1' WHERE `sl_no` = ?";
+					String query = "UPDATE "+dbCredentials.getTableName()
+									+" SET winter_internship.is_deleted = '1' WHERE `sl_no` = ? ORDER BY sl_no";
 					PreparedStatement pst = con.prepareStatement(query);
-					pst.setString(1, sl_no);
+					pst.setString(1, sl_no); 
 					pst.execute();
 					out.println(sl_no + " record has been removed from view");
 					

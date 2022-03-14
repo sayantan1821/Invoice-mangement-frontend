@@ -3,13 +3,9 @@ package web;
 public class MainPojo {
 	private int sl_no;
 	private String business_code;
-	
 	private String business_name;
-	
 	private String cust_number;
-	
 	private String name_customer;
-	
 	private String clear_date;
 	private String business_year;
 	private String doc_id;
@@ -28,13 +24,8 @@ public class MainPojo {
 	private int isOpen;
 	private String aging_Bucket = "";
 	private String is_deleted;
-	private String predicted;
-	
-//	private String columns = "sl_no, business_code, cust_number, clear_date, business_year, doc_id, posting_date, " +
-//								"document_create_date, document_create_date1, due_in_date, invoice_currency, "+
-//								"document_type, posting_id, area_business, total_open_amount, baseline_create_date, "+
-//								"cust_payment_terms, invoice_id, isOpen, aging_Bucket, is_deleted";
-	
+	private String predicted = "";
+
 	public int getSl_no() {
 		return sl_no;
 	}
@@ -173,14 +164,11 @@ public class MainPojo {
 	public void setBusiness_name(String business_name) {
 		this.business_name = business_name;
 	}
-//	public String getColumns() {
-//		return columns;
-//	}
 	public String getPredicted() {
 		return predicted;
 	}
 	public void setPredicted(String predicted) {
-		this.predicted = predicted;
+		if(predicted != null) this.predicted = predicted;
 	}
 	
 	

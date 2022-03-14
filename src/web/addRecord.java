@@ -50,7 +50,12 @@ public class addRecord extends HttpServlet {
 				
 				Connection con = connectDB.getConnection();
 				PreparedStatement pst = null;
-				String query = "INSERT INTO "+dbCredentials.getTableName() +" (sl_no, business_code, cust_number, clear_date, buisness_year, doc_id, posting_date, document_create_date, due_in_date, invoice_currency, document_type, posting_id, total_open_amount, baseline_create_date, cust_payment_terms, invoice_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				String query = "INSERT INTO "+dbCredentials.getTableName() 
+							+" (sl_no, business_code, cust_number, clear_date, buisness_year,"
+							+" doc_id, posting_date, document_create_date, due_in_date, invoice_currency,"
+							+" document_type, posting_id, total_open_amount, baseline_create_date,"
+							+" cust_payment_terms, invoice_id) VALUES"
+							+" (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 				pst = con.prepareStatement(query);
 
 				pst.setInt(1, fp.getSl_no());
@@ -71,13 +76,6 @@ public class addRecord extends HttpServlet {
 		        pst.setInt(16, fp.getInvoice_id());
 
 				pst.executeUpdate();
-				
-//				Gson gs = new Gson();
-//				String jsonData = gs.toJson(fp);
-//				
-//				res.setContentType("application/json");
-//				res.setCharacterEncoding("UTF-8");
-//				out.println(jsonData);
 				RequestDispatcher rd = req.getRequestDispatcher("recordById");
 				rd.forward(req,  res);
 				

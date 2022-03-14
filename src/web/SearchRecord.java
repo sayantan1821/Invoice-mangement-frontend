@@ -16,18 +16,16 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
+
 @WebServlet("/api/recordById")
 public class SearchRecord extends HttpServlet {
 
-	
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-
-//		int sl_no = Integer.parseInt(req.getParameter("sl_no")); 
 		String sl_par = req.getParameter("sl_no");
 		int sl_no = -1;
 		if(sl_par != null) sl_no = Integer.parseInt(sl_par);
@@ -35,11 +33,23 @@ public class SearchRecord extends HttpServlet {
 		if(req.getParameter("pageNo") != null) pageNo = Integer.parseInt(req.getParameter("pageNo"));
         if(req.getParameter("recordsPerPage") != null) recordsPerPage = Integer.parseInt(req.getParameter("recordsPerPage"));
 		int startIndex = pageNo * recordsPerPage;
+		
 		String search_by_cust_number = req.getParameter("search_by_cust_number");
 		String cust_number = req.getParameter("cust_number"); 
 		PrintWriter out = res.getWriter();
 		String query = null;
-		String columns = "winter_internship.sl_no, winter_internship.business_code, business.business_name, winter_internship.cust_number, customer.name_customer, winter_internship.clear_date, winter_internship.buisness_year, winter_internship.doc_id, winter_internship.posting_date, winter_internship.document_create_date, winter_internship.document_create_date1, winter_internship.due_in_date, winter_internship.invoice_currency, winter_internship.document_type, winter_internship.posting_id, winter_internship.area_business, winter_internship.total_open_amount, winter_internship.baseline_create_date, winter_internship.cust_payment_terms, winter_internship.invoice_id, winter_internship.isOpen, winter_internship.aging_Bucket, winter_internship.is_deleted";
+		String columns = "winter_internship.sl_no, winter_internship.business_code,"
+						+" business.business_name, winter_internship.cust_number, customer.name_customer,"
+						+" winter_internship.clear_date, winter_internship.buisness_year,"
+						+" winter_internship.doc_id, winter_internship.posting_date,"
+						+" winter_internship.document_create_date, winter_internship.document_create_date1,"
+						+" winter_internship.due_in_date, winter_internship.invoice_currency,"
+						+" winter_internship.document_type, winter_internship.posting_id,"
+						+" winter_internship.area_business, winter_internship.total_open_amount,"
+						+" winter_internship.baseline_create_date, winter_internship.cust_payment_terms,"
+						+" winter_internship.invoice_id, winter_internship.isOpen,"
+						+" winter_internship.aging_Bucket, winter_internship.is_deleted,"
+						+" winter_internship.predicted";
 		try {
 			if((cust_number != null) || (sl_par != null && isExist.ifDataExistsById(sl_no))) {
 
@@ -50,12 +60,18 @@ public class SearchRecord extends HttpServlet {
 				
 				if(search_by_cust_number != null) {
 					query = "select "+columns+" from "+dbCredentials.getTableName()
-								+" LEFT JOIN `business` ON `winter_internship`.`business_code` = `business`.`business_code` LEFT JOIN `customer` ON `winter_internship`.`cust_number` = `customer`.`cust_number` where winter_internship.cust_number = " + cust_number + " AND is_deleted = 0  LIMIT " + startIndex + ", " + recordsPerPage;
+							+" LEFT JOIN `business` ON `winter_internship`.`business_code`"
+							+" = `business`.`business_code` LEFT JOIN `customer` ON"
+							+" `winter_internship`.`cust_number` = `customer`.`cust_number`"
+							+" where winter_internship.cust_number LIKE '"+cust_number+"%' AND is_deleted = 0  LIMIT " + startIndex + ", " + recordsPerPage;
 				} else {
 					query = "select "+columns+" from "+dbCredentials.getTableName()
-					+" LEFT JOIN `business` ON `winter_internship`.`business_code` = `business`.`business_code` LEFT JOIN `customer` ON `winter_internship`.`cust_number` = `customer`.`cust_number` where sl_no = " + sl_no + " AND is_deleted = 0  LIMIT " + startIndex + ", " + recordsPerPage;
+							+" LEFT JOIN `business` ON `winter_internship`.`business_code`"
+							+" = `business`.`business_code` LEFT JOIN `customer` ON"
+							+"`winter_internship`.`cust_number` = `customer`.`cust_number`"
+							+" where sl_no = " + sl_no + " AND is_deleted = 0  LIMIT " 
+							+ startIndex + ", " + recordsPerPage;
 				}
-				
 				
 				st = con.createStatement();
 				rs = st.executeQuery(query);
@@ -77,7 +93,7 @@ public class SearchRecord extends HttpServlet {
 					pojo.setDocument_create_date(rs.getString("document_create_date"));
 					pojo.setDocument_create_date1(rs.getString("document_create_date1"));
 					pojo.setDue_in_date(rs.getString("due_in_date"));
-					pojo.setInvoice_currency(rs.getString("invoice_currency"));
+					pojo.setInvoice_currency(rs.getString("invoice_currency")); 
 					pojo.setDocument_type(rs.getString("document_type"));
 					pojo.setPosting_id(Integer.parseInt(rs.getString("posting_id")));
 					pojo.setArea_business(rs.getString("area_business"));
@@ -88,6 +104,7 @@ public class SearchRecord extends HttpServlet {
 					pojo.setIsOpen(rs.getInt("isOpen"));
 					pojo.setAging_Bucket(rs.getString("aging_Bucket"));
 					pojo.setIs_deleted(rs.getString("is_deleted"));
+					pojo.setPredicted(rs.getString("predicted"));
 			        
 			        pojoArray.add(pojo);
 				}

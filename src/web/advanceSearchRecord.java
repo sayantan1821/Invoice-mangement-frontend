@@ -36,19 +36,31 @@ public class advanceSearchRecord extends HttpServlet {
 		if (req.getParameter("recordsPerPage") != null)
 			recordsPerPage = Integer.parseInt(req.getParameter("recordsPerPage"));
 		int startIndex = pageNo * recordsPerPage;
-		// String invoice_id = req.getParameter("");
+
 		String query1 = null;
 		String query2 = null;
-		String columns = "winter_internship.sl_no, winter_internship.business_code, business.business_name, winter_internship.cust_number, customer.name_customer, winter_internship.clear_date, winter_internship.buisness_year, winter_internship.doc_id, winter_internship.posting_date, winter_internship.document_create_date, winter_internship.document_create_date1, winter_internship.due_in_date, winter_internship.invoice_currency, winter_internship.document_type, winter_internship.posting_id, winter_internship.area_business, winter_internship.total_open_amount, winter_internship.baseline_create_date, winter_internship.cust_payment_terms, winter_internship.invoice_id, winter_internship.isOpen, winter_internship.aging_Bucket, winter_internship.is_deleted";
+		String columns = "winter_internship.sl_no, winter_internship.business_code,"
+						+" business.business_name, winter_internship.cust_number, customer.name_customer,"
+						+" winter_internship.clear_date, winter_internship.buisness_year,"
+						+" winter_internship.doc_id, winter_internship.posting_date,"
+						+" winter_internship.document_create_date, winter_internship.document_create_date1,"
+						+" winter_internship.due_in_date, winter_internship.invoice_currency,"
+						+" winter_internship.document_type, winter_internship.posting_id,"
+						+" winter_internship.area_business, winter_internship.total_open_amount,"
+						+" winter_internship.baseline_create_date, winter_internship.cust_payment_terms,"
+						+" winter_internship.invoice_id, winter_internship.isOpen,"
+						+" winter_internship.aging_Bucket, winter_internship.is_deleted,"
+						+" winter_internship.predicted";
 
 		PrintWriter out = res.getWriter();
 		try {
 			Connection con = connectDB.getConnection();
 			Statement st = con.createStatement();
 
-			query1 = "SELECT EXISTS(SELECT * FROM " + dbCredentials.getTableName() + " WHERE (" + doc_id
-					+ " IS NULL OR doc_id = " + doc_id + ") AND (" + cust_number + " IS NULL OR cust_number = "
-					+ cust_number + ") AND (" + buisness_year + " IS NULL OR buisness_year = " + buisness_year + "))";
+			query1 = "SELECT EXISTS(SELECT "+ columns +" FROM " + dbCredentials.getTableName() 
+					+ " WHERE (" + doc_id + " IS NULL OR doc_id = " + doc_id + ") AND (" 
+					+ cust_number + " IS NULL OR cust_number = " + cust_number + ") AND (" 
+					+ buisness_year + " IS NULL OR buisness_year = " + buisness_year + "))";
 			ResultSet rs1 = st.executeQuery(query1);
 
 			String r = null;
@@ -57,16 +69,15 @@ public class advanceSearchRecord extends HttpServlet {
 			}
 			if (r.equals("1")) {
 				st = con.createStatement();
-
-				// query2 = "SELECT " + columns + " FROM " + dbCredentials.getTableName() + " WHERE (" + doc_id
-				// 		+ " IS NULL OR doc_id = "
-				// 		+ doc_id + ") AND (" + cust_number + " IS NULL OR cust_number = " + cust_number + ") AND ("
-				// 		+ buisness_year + " IS NULL OR buisness_year = " + buisness_year + ") LIMIT " + startIndex
-				// 		+ ", " + recordsPerPage;
-				query2 = "SELECT " + columns + " FROM " + dbCredentials.getTableName() + " LEFT JOIN `business` ON `winter_internship`.`business_code` = `business`.`business_code` LEFT JOIN `customer` ON `winter_internship`.`cust_number` = `customer`.`cust_number` WHERE (" + doc_id
-						+ " IS NULL OR doc_id = "
-						+ doc_id + ") AND (" + cust_number + " IS NULL OR winter_internship.cust_number = " + cust_number + ") AND (" + invoice_id + " IS NULL OR winter_internship.invoice_id = " + invoice_id + ") AND ("
-						+ buisness_year + " IS NULL OR buisness_year = " + buisness_year + ") AND winter_internship.is_deleted = 0 LIMIT " + startIndex+ ", " + recordsPerPage;
+				query2 = "SELECT " + columns + " FROM " + dbCredentials.getTableName() 
+						+" LEFT JOIN `business` ON `winter_internship`.`business_code` ="
+						+" `business`.`business_code` LEFT JOIN `customer` ON"
+						+" `winter_internship`.`cust_number` = `customer`.`cust_number` WHERE (" 
+						+ doc_id + " IS NULL OR doc_id = " + doc_id + ") AND (" + cust_number 
+						+ " IS NULL OR winter_internship.cust_number = " + cust_number + ") AND (" 
+						+ invoice_id + " IS NULL OR winter_internship.invoice_id = " + invoice_id 
+						+ ") AND (" + buisness_year + " IS NULL OR buisness_year = " + buisness_year 
+						+ ") AND winter_internship.is_deleted = 0 LIMIT " + startIndex+ ", " + recordsPerPage;
 
 				ResultSet rs2 = st.executeQuery(query2);
 
@@ -97,17 +108,13 @@ public class advanceSearchRecord extends HttpServlet {
 					pojo.setIsOpen(rs2.getInt("isOpen"));
 					pojo.setAging_Bucket(rs2.getString("aging_Bucket"));
 					pojo.setIs_deleted(rs2.getString("is_deleted"));
-
+					pojo.setPredicted(rs2.getString("predicted"));
 					pojoArray.add(pojo);
 				}
 				GsonBuilder gb = new GsonBuilder();
 				Gson gs = gb.create();
 				String jsonData = gs.toJson(pojoArray);
-				// if (endIndex <= pojoArray.size()) {
-				// List<MainPojo> subPojoArray = pojoArray.subList(startIndex, endIndex);
-				// jsonData = gs.toJson(subPojoArray);
-				// } else
-				// jsonData = gs.toJson(pojoArray);
+				
 				res.setContentType("application/json");
 				res.setCharacterEncoding("UTF-8");
 

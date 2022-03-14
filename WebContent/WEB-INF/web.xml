@@ -12,7 +12,7 @@
 		</init-param>
 		<init-param>
 			<param-name>cors.allowed.origins</param-name>
-			<param-value>https://prqtoy.csb.app/</param-value>
+			<param-value>/*</param-value>
 		</init-param>
 		<init-param>
 			<param-name>cors.allowed.methods</param-name>
