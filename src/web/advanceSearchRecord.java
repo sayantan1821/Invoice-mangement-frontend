@@ -57,10 +57,15 @@ public class advanceSearchRecord extends HttpServlet {
 			Connection con = connectDB.getConnection();
 			Statement st = con.createStatement();
 
-			query1 = "SELECT EXISTS(SELECT "+ columns +" FROM " + dbCredentials.getTableName() 
-					+ " WHERE (" + doc_id + " IS NULL OR doc_id = " + doc_id + ") AND (" 
-					+ cust_number + " IS NULL OR cust_number = " + cust_number + ") AND (" 
-					+ buisness_year + " IS NULL OR buisness_year = " + buisness_year + "))";
+			query1 = "SELECT EXISTS(SELECT " + columns + " FROM " + dbCredentials.getTableName() 
+			+" LEFT JOIN `business` ON `winter_internship`.`business_code` ="
+			+" `business`.`business_code` LEFT JOIN `customer` ON"
+			+" `winter_internship`.`cust_number` = `customer`.`cust_number` WHERE (" 
+			+ doc_id + " IS NULL OR doc_id = " + doc_id + ") AND (" + cust_number 
+			+ " IS NULL OR winter_internship.cust_number = " + cust_number + ") AND (" 
+			+ invoice_id + " IS NULL OR winter_internship.invoice_id = " + invoice_id 
+			+ ") AND (" + buisness_year + " IS NULL OR buisness_year = " + buisness_year 
+			+ ") AND winter_internship.is_deleted = 0)";
 			ResultSet rs1 = st.executeQuery(query1);
 
 			String r = null;
