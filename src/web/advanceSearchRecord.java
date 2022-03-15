@@ -26,10 +26,10 @@ public class advanceSearchRecord extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		String doc_id = req.getParameter("doc_id");
-		String cust_number = req.getParameter("cust_number");
-		String buisness_year = req.getParameter("buisness_year");
-		String invoice_id = req.getParameter("invoice_id");
+		String doc_id = (req.getParameter("doc_id").length() > 0) ? req.getParameter("doc_id") : null;
+		String cust_number = (req.getParameter("cust_number").length() > 0) ? req.getParameter("cust_number") : null;
+		String buisness_year = (req.getParameter("buisness_year").length() > 0) ? req.getParameter("buisness_year") : null;
+		String invoice_id = req.getParameter("invoice_id").length() > 0 ? req.getParameter("invoice_id") : null;
 		int pageNo = 0, recordsPerPage = 10;
 		if (req.getParameter("pageNo") != null)
 			pageNo = Integer.parseInt(req.getParameter("pageNo"));
