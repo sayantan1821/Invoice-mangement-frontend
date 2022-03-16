@@ -34,7 +34,6 @@ public class RestoreData extends HttpServlet {
 			ResultSet rs1 = st.executeQuery(query1);
 			while (rs1.next()) {
 				String sl_no = rs1.getString("sl_no");
-				System.out.println(sl_no);
 				PreparedStatement pst = con.prepareStatement(query2);
 				pst.setString(1, sl_no);
 				pst.executeUpdate();

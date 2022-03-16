@@ -43,7 +43,7 @@ public class removeFromView extends HttpServlet {
 					out.println(sl_no + " record can not be found");
 				}
 			} catch (NumberFormatException | SQLException e) {
-				e.printStackTrace();
+				e.printStackTrace(); 
 			}
 		}
 		out.flush();
