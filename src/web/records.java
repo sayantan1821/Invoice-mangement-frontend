@@ -45,7 +45,7 @@ public class records extends HttpServlet {
 		String query = "select "+columns+" from " + dbCredentials.getTableName()
 				+ " LEFT JOIN `business` ON `winter_internship`.`business_code` = "
 				+ "`business`.`business_code` LEFT JOIN `customer` ON `winter_internship`.`cust_number` "
-				+"= `customer`.`cust_number` WHERE winter_internship.is_deleted = 0 LIMIT " 
+				+"= `customer`.`cust_number` WHERE winter_internship.is_deleted = 0 ORDER BY winter_internship.sl_no LIMIT " 
 				+ startIndex +  ", " + recordsPerPage;
 
 		ArrayList<MainPojo> pojoArray = new ArrayList<MainPojo>();

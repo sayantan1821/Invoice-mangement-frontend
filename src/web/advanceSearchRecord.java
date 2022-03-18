@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -51,11 +50,11 @@ public class advanceSearchRecord extends HttpServlet {
 
 		try {
 			con = connectDB.getConnection();
-			query = "SELECT * FROM winter_internship WHERE ( " + doc_id + " IS NULL OR doc_id LIKE '" + doc_id
-					+ "%') AND ( " + cust_number + " IS NULL OR cust_number LIKE '" + cust_number + "%') AND ( "
-					+ invoice_id + " IS NULL OR invoice_id LIKE '" + invoice_id + "%') AND ( " + buisness_year
-					+ " IS NULL OR buisness_year LIKE '" + buisness_year + "%') AND is_deleted = 0 LIMIT " 
-					+ startIndex + "," + recordsPerPage;
+			query = "SELECT * FROM " + dbCredentials.getTableName() + " WHERE ( " + doc_id + " IS NULL OR doc_id LIKE '"
+					+ doc_id + "%') AND ( " + cust_number + " IS NULL OR cust_number LIKE '" + cust_number
+					+ "%') AND ( " + invoice_id + " IS NULL OR invoice_id LIKE '" + invoice_id + "%') AND ( "
+					+ buisness_year + " IS NULL OR buisness_year LIKE '" + buisness_year
+					+ "%') AND is_deleted = 0 LIMIT " + startIndex + "," + recordsPerPage;
 			pst = con.prepareStatement(query);
 
 			ResultSet rs = pst.executeQuery(query);
