@@ -42,9 +42,9 @@ public class advanceSearchRecord extends HttpServlet {
 		if (req.getParameter("buisness_year") != null && req.getParameter("buisness_year").length() > 0)
 			buisness_year = req.getParameter("buisness_year");
 
-		if (req.getParameter("pageNo") != null)
+		if (req.getParameter("pageNo") != null && req.getParameter("pageNo").length() > 0)
 			pageNo = Integer.parseInt(req.getParameter("pageNo"));
-		if (req.getParameter("recordsPerPage") != null)
+		if (req.getParameter("recordsPerPage") != null && req.getParameter("recordsPerPage").length() > 0)
 			recordsPerPage = Integer.parseInt(req.getParameter("recordsPerPage"));
 		int startIndex = pageNo * recordsPerPage;
 

@@ -12,8 +12,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.gson.Gson;
 import database.connectDB;
 import database.dbCredentials;
+
  
 @WebServlet("/api/count")
 public class countRecords extends HttpServlet {
@@ -34,8 +36,14 @@ public class countRecords extends HttpServlet {
 			
 			rs.next();
 			String count = rs.getString(1);
-			
-			out.println(count);
+			totalCount tc = new totalCount();
+			tc.count = count;
+			Gson gson = new Gson();
+			String jsonData = gson.toJson(tc);
+			res.setContentType("application/json");
+			res.setCharacterEncoding("UTF-8");
+
+			out.println(jsonData);
 			
 			con.close();
 			st.close();
@@ -46,4 +54,7 @@ public class countRecords extends HttpServlet {
 		out.flush();
 		out.close();
 	}
+}
+class totalCount {
+	String count;
 }
