@@ -26,8 +26,11 @@ public class records extends HttpServlet {
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		PrintWriter out = res.getWriter(); 
-		int pageNo = Integer.parseInt(req.getParameter("pageNo"));
-		int recordsPerPage = Integer.parseInt(req.getParameter("recordsPerPage"));
+		int pageNo = 0, recordsPerPage= 10;
+		if (req.getParameter("pageNo") != null && req.getParameter("pageNo").length() > 0)
+			pageNo = Integer.parseInt(req.getParameter("pageNo"));
+		if (req.getParameter("recordsPerPage") != null && req.getParameter("recordsPerPage").length() > 0)
+			recordsPerPage = Integer.parseInt(req.getParameter("recordsPerPage"));
 		int startIndex = pageNo * recordsPerPage;
 		String columns = "winter_internship.sl_no, winter_internship.business_code,"
 						+" business.business_name, winter_internship.cust_number,"
