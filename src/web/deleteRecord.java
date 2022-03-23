@@ -13,6 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import database.connectDB;
 import database.dbCredentials;
+
+import com.google.gson.Gson;
+
 @WebServlet("/api/deleteById")
 public class deleteRecord extends HttpServlet {
 	/**
@@ -24,6 +27,8 @@ public class deleteRecord extends HttpServlet {
 		String sl_nos = req.getParameter("sl_nos");
 		String[] slArray = sl_nos.split("[,]", 0);
 		PrintWriter out = res.getWriter();
+		serverResponse sr = new serverResponse();
+		Gson gson = new Gson();
 		for(String sl_no : slArray) {
 			try {
 				if(isExist.ifDataExistsById(Integer.parseInt(sl_no))) {
@@ -33,13 +38,25 @@ public class deleteRecord extends HttpServlet {
 					PreparedStatement pst = con.prepareStatement(query);
 					pst.setString(1, sl_no);
 					pst.execute();
-					out.println(sl_no + " record has been deleted");
+					sr.code ="200";
+					sr.mssg =sl_no + " record has been deleted";
+					String jsonData = gson.toJson(sr);
+					res.setContentType("application/json");
+					res.setCharacterEncoding("UTF-8");
+
+					out.println(jsonData);
 					
 					con.close();
 					pst.close();
 					
 				} else {
-					out.println(sl_no + " record can not be deleted");
+					sr.code ="400";
+					sr.mssg = sl_no + " record can not be deleted";
+					String jsonData = gson.toJson(sr);
+					res.setContentType("application/json");
+					res.setCharacterEncoding("UTF-8");
+
+					out.println(jsonData);
 				}
 			} catch (NumberFormatException | SQLException e) {
 				e.printStackTrace();

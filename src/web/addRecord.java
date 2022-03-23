@@ -113,9 +113,8 @@ public class addRecord extends HttpServlet {
 					pst3.setInt(16, fp.getInvoice_id());
 
 					pst3.executeUpdate();
-					
 					sr.code ="200";
-					sr.mssg = "Record Inserted Successfully";
+					sr.mssg = "Record Inserted Successfully Sl No. " + fp.getSl_no();
 					
 					String jsonData = gson.toJson(sr);
 					res.setContentType("application/json");
@@ -162,10 +161,7 @@ public class addRecord extends HttpServlet {
 	}
 	
 }
-class serverResponse {
-	String code;
-	String mssg;
-}
+
 
 // To do
 // 1. Advanced search --- done
