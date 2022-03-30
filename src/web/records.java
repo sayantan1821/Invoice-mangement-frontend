@@ -10,11 +10,14 @@ import com.google.gson.GsonBuilder;
 
 import database.connectDB;
 import database.dbCredentials;
+import helper.totalCount;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet("/api/records")
 public class records extends HttpServlet {
@@ -50,7 +53,9 @@ public class records extends HttpServlet {
 				+ "`business`.`business_code` LEFT JOIN `customer` ON `winter_internship`.`cust_number` "
 				+"= `customer`.`cust_number` WHERE winter_internship.is_deleted = 0 ORDER BY winter_internship.sl_no LIMIT " 
 				+ startIndex +  ", " + recordsPerPage;
-
+		String query1 = "SELECT COUNT(*) AS count FROM `winter_internship` LEFT JOIN `business` ON `business`.`business_code` = `winter_internship`.`business_code` LEFT JOIN `customer` ON `customer`.`cust_number`=`winter_internship`.`cust_number` WHERE is_deleted = 0";
+		
+		Map<String,Object> objectMap = new HashMap<>();
 		ArrayList<MainPojo> pojoArray = new ArrayList<MainPojo>();
 		try {
 			Connection con = connectDB.getConnection();
@@ -88,10 +93,16 @@ public class records extends HttpServlet {
 
 				pojoArray.add(pojo);
 			}
+			objectMap.put("records", pojoArray);
+			totalCount tc = new totalCount();
+			PreparedStatement pst = con.prepareStatement(query1);
+			rs = pst.executeQuery(query1);
+			rs.next();
+			tc.count = rs.getInt("count");
+			objectMap.put("count", tc);
 
-			GsonBuilder gb = new GsonBuilder();
-			Gson gs = gb.create();
-			String jsonData = gs.toJson(pojoArray);
+			Gson gson = new Gson(); 
+			String jsonData = gson.toJson(objectMap);
 
 			res.setContentType("application/json");
 			res.setCharacterEncoding("UTF-8");

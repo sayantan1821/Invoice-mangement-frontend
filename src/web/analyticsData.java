@@ -7,6 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -37,6 +39,8 @@ public class analyticsData extends HttpServlet {
 		PrintWriter out = res.getWriter();
 		Connection con = null;
 		PreparedStatement pst = null;
+		PreparedStatement pst1 = null;
+		PreparedStatement pst2 = null;
 		
 		if (req.getParameter("clear_date_start") != null && req.getParameter("clear_date_start").length() > 0) {
 			clear_date_start = req.getParameter("clear_date_start");
@@ -88,12 +92,11 @@ public class analyticsData extends HttpServlet {
 			if (invoice_currency != null && invoice_currency.length() > 0)
 				query = query + "`invoice_currency` = '" + invoice_currency + "' AND ";
 			query = query + "`is_deleted` = 0 GROUP BY `business_code`";
-			System.out.println("abc");
+
 			pst = con.prepareStatement(query);
-
-			System.out.println("query" + query);
 			ResultSet rs = pst.executeQuery(query);
-
+			
+			Map<String,Object> objectMap = new HashMap<>();
 			ArrayList<AnalyticsPojo> pojoArray = new ArrayList<AnalyticsPojo>();
 			while (rs.next()) {
 				AnalyticsPojo ap = new AnalyticsPojo();
@@ -104,9 +107,25 @@ public class analyticsData extends HttpServlet {
 
 				pojoArray.add(ap);
 			}
-			GsonBuilder gb = new GsonBuilder();
-			Gson gs = gb.create();
-			String jsonData = gs.toJson(pojoArray);
+			objectMap.put("businessCode", pojoArray);
+			
+			query1 = "SELECT COUNT(*) AS usd FROM `winter_internship` WHERE `invoice_currency` = 'USD' AND `is_deleted` = 0 ";
+			query2 = "SELECT COUNT(*) AS cad FROM `winter_internship` WHERE `invoice_currency` = 'CAD' AND `is_deleted` = 0 ";
+			
+			pst1 = con.prepareStatement(query1);
+			pst2 = con.prepareStatement(query2);
+			
+			rs = pst1.executeQuery(query1);
+			rs.next();
+			currency cur = new currency();
+			cur.usd = rs.getInt("usd");
+			rs = pst2.executeQuery(query2);
+			rs.next();
+			cur.cad = rs.getInt("cad");
+			
+			objectMap.put("currency", cur);
+			Gson gson = new Gson(); 
+			String jsonData = gson.toJson(objectMap);
 
 			res.setContentType("application/json");
 			res.setCharacterEncoding("UTF-8");
@@ -123,4 +142,8 @@ public class analyticsData extends HttpServlet {
 		out.close();
 	}
 
+}
+class currency {
+	int usd;
+	int cad;
 }
