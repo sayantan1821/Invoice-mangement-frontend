@@ -7,6 +7,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +20,7 @@ import com.google.gson.GsonBuilder;
 
 import database.connectDB;
 import database.dbCredentials;
+import helper.totalCount;
 
 @WebServlet("/api/advanceSearch")
 public class advanceSearchRecord extends HttpServlet {
@@ -28,6 +32,7 @@ public class advanceSearchRecord extends HttpServlet {
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
 		String doc_id = null, invoice_id = null, cust_number = null, buisness_year = null;
 		String query = null;
+		String query1 = null;
 		int pageNo = 0, recordsPerPage = 10;
 		PrintWriter out = res.getWriter();
 		Connection con = null;
@@ -58,7 +63,7 @@ public class advanceSearchRecord extends HttpServlet {
 			pst = con.prepareStatement(query);
 
 			ResultSet rs = pst.executeQuery(query);
-
+			Map<String,Object> objectMap = new HashMap<>();
 			ArrayList<MainPojo> pojoArray = new ArrayList<MainPojo>();
 			while (rs.next()) {
 				MainPojo pojo = new MainPojo();
@@ -87,9 +92,22 @@ public class advanceSearchRecord extends HttpServlet {
 
 				pojoArray.add(pojo);
 			}
-			GsonBuilder gb = new GsonBuilder();
-			Gson gs = gb.create();
-			String jsonData = gs.toJson(pojoArray);
+			objectMap.put("advanceSearch", pojoArray);
+			query1 = "SELECT COUNT(*) AS count FROM " + dbCredentials.getTableName() + " WHERE ( " + doc_id + " IS NULL OR doc_id LIKE '%"
+					+ doc_id + "%') AND ( " + cust_number + " IS NULL OR cust_number LIKE '%" + cust_number
+					+ "%') AND ( " + invoice_id + " IS NULL OR invoice_id LIKE '%" + invoice_id + "%') AND ( "
+					+ buisness_year + " IS NULL OR buisness_year LIKE '%" + buisness_year
+					+ "%') AND is_deleted = 0 ";
+			
+			pst = con.prepareStatement(query1);
+			rs = pst.executeQuery(query1);
+			rs.next();
+			totalCount tc = new totalCount();
+			tc.count = rs.getInt("count");
+			objectMap.put("count", tc);
+			
+			Gson gson = new Gson(); 
+			String jsonData = gson.toJson(objectMap);
 
 			res.setContentType("application/json");
 			res.setCharacterEncoding("UTF-8");
