@@ -26,34 +26,40 @@ public class records extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-		PrintWriter out = res.getWriter(); 
-		int pageNo = 0, recordsPerPage= 10;
+		PrintWriter out = res.getWriter();
+		int pageNo = 0, recordsPerPage = 10;
+		String orderBy = "sl_no", order = "ASC";
 		if (req.getParameter("pageNo") != null && req.getParameter("pageNo").length() > 0)
 			pageNo = Integer.parseInt(req.getParameter("pageNo"));
 		if (req.getParameter("recordsPerPage") != null && req.getParameter("recordsPerPage").length() > 0)
 			recordsPerPage = Integer.parseInt(req.getParameter("recordsPerPage"));
+		if (req.getParameter("orderBy") != null && req.getParameter("orderBy").length() > 0)
+			orderBy = req.getParameter("orderBy");
+		if (req.getParameter("order") != null && req.getParameter("order").length() > 0)
+			order = req.getParameter("order");
+
 		int startIndex = pageNo * recordsPerPage;
 		String columns = "winter_internship.sl_no, winter_internship.business_code,"
-						+" business.business_name, winter_internship.cust_number,"
-						+" customer.name_customer, winter_internship.clear_date,"
-						+" winter_internship.buisness_year, winter_internship.doc_id,"
-						+" winter_internship.posting_date, winter_internship.document_create_date,"
-						+" winter_internship.document_create_date1, winter_internship.due_in_date,"
-						+" winter_internship.invoice_currency, winter_internship.document_type,"
-						+" winter_internship.posting_id, winter_internship.area_business,"
-						+" winter_internship.total_open_amount, winter_internship.baseline_create_date,"
-						+" winter_internship.cust_payment_terms, winter_internship.invoice_id,"
-						+" winter_internship.isOpen, winter_internship.aging_Bucket,"
-						+" winter_internship.is_deleted, winter_internship.predicted";
+				+ " business.business_name, winter_internship.cust_number,"
+				+ " customer.name_customer, winter_internship.clear_date,"
+				+ " winter_internship.buisness_year, winter_internship.doc_id,"
+				+ " winter_internship.posting_date, winter_internship.document_create_date,"
+				+ " winter_internship.document_create_date1, winter_internship.due_in_date,"
+				+ " winter_internship.invoice_currency, winter_internship.document_type,"
+				+ " winter_internship.posting_id, winter_internship.area_business,"
+				+ " winter_internship.total_open_amount, winter_internship.baseline_create_date,"
+				+ " winter_internship.cust_payment_terms, winter_internship.invoice_id,"
+				+ " winter_internship.isOpen, winter_internship.aging_Bucket,"
+				+ " winter_internship.is_deleted, winter_internship.predicted";
 
-		String query = "select "+columns+" from " + dbCredentials.getTableName()
+		String query = "select " + columns + " from " + dbCredentials.getTableName()
 				+ " LEFT JOIN `business` ON `winter_internship`.`business_code` = "
 				+ "`business`.`business_code` LEFT JOIN `customer` ON `winter_internship`.`cust_number` "
-				+"= `customer`.`cust_number` WHERE winter_internship.is_deleted = 0 ORDER BY winter_internship.sl_no LIMIT " 
-				+ startIndex +  ", " + recordsPerPage;
+				+ "= `customer`.`cust_number` WHERE winter_internship.is_deleted = 0 ORDER BY " + orderBy + " " + order
+				+ " LIMIT " + startIndex + ", " + recordsPerPage;
 		String query1 = "SELECT COUNT(*) AS count FROM `winter_internship` LEFT JOIN `business` ON `business`.`business_code` = `winter_internship`.`business_code` LEFT JOIN `customer` ON `customer`.`cust_number`=`winter_internship`.`cust_number` WHERE is_deleted = 0";
-		
-		Map<String,Object> objectMap = new HashMap<>();
+
+		Map<String, Object> objectMap = new HashMap<>();
 		ArrayList<MainPojo> pojoArray = new ArrayList<MainPojo>();
 		try {
 			Connection con = connectDB.getConnection();
@@ -99,7 +105,7 @@ public class records extends HttpServlet {
 			tc.count = rs.getInt("count");
 			objectMap.put("count", tc);
 
-			Gson gson = new Gson(); 
+			Gson gson = new Gson();
 			String jsonData = gson.toJson(objectMap);
 
 			res.setContentType("application/json");
