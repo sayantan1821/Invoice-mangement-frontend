@@ -36,7 +36,7 @@ public class records extends HttpServlet {
 		if (req.getParameter("orderBy") != null && req.getParameter("orderBy").length() > 0)
 			orderBy = req.getParameter("orderBy");
 		if (req.getParameter("order") != null && req.getParameter("order").length() > 0)
-			order = req.getParameter("order");
+			order = req.getParameter("order").toUpperCase();
 
 		int startIndex = pageNo * recordsPerPage;
 		String columns = "winter_internship.sl_no, winter_internship.business_code,"
@@ -56,7 +56,7 @@ public class records extends HttpServlet {
 				+ " LEFT JOIN `business` ON `winter_internship`.`business_code` = "
 				+ "`business`.`business_code` LEFT JOIN `customer` ON `winter_internship`.`cust_number` "
 				+ "= `customer`.`cust_number` WHERE winter_internship.is_deleted = 0 ORDER BY " + orderBy + " " + order
-				+ " LIMIT " + startIndex + ", " + recordsPerPage;
+				+ ", sl_no ASC LIMIT " + startIndex + ", " + recordsPerPage;
 		String query1 = "SELECT COUNT(*) AS count FROM `winter_internship` LEFT JOIN `business` ON `business`.`business_code` = `winter_internship`.`business_code` LEFT JOIN `customer` ON `customer`.`cust_number`=`winter_internship`.`cust_number` WHERE is_deleted = 0";
 
 		Map<String, Object> objectMap = new HashMap<>();

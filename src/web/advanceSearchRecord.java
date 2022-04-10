@@ -34,6 +34,7 @@ public class advanceSearchRecord extends HttpServlet {
 		String query = null;
 		String query1 = null;
 		int pageNo = 0, recordsPerPage = 10;
+		String orderBy = "sl_no", order = "ASC";
 		PrintWriter out = res.getWriter();
 		Connection con = null;
 		PreparedStatement pst = null;
@@ -51,6 +52,12 @@ public class advanceSearchRecord extends HttpServlet {
 			pageNo = Integer.parseInt(req.getParameter("pageNo"));
 		if (req.getParameter("recordsPerPage") != null && req.getParameter("recordsPerPage").length() > 0)
 			recordsPerPage = Integer.parseInt(req.getParameter("recordsPerPage"));
+
+		if (req.getParameter("orderBy") != null && req.getParameter("orderBy").length() > 0)
+			orderBy = req.getParameter("orderBy");
+		if (req.getParameter("order") != null && req.getParameter("order").length() > 0)
+			order = req.getParameter("order").toUpperCase();
+
 		int startIndex = pageNo * recordsPerPage;
 
 		try {
@@ -59,11 +66,12 @@ public class advanceSearchRecord extends HttpServlet {
 					+ doc_id + "%') AND ( " + cust_number + " IS NULL OR cust_number LIKE '" + cust_number
 					+ "%') AND ( " + invoice_id + " IS NULL OR invoice_id LIKE '" + invoice_id + "%') AND ( "
 					+ buisness_year + " IS NULL OR buisness_year LIKE '" + buisness_year
-					+ "%') AND is_deleted = 0 LIMIT " + startIndex + "," + recordsPerPage;
+					+ "%') AND is_deleted = 0 ORDER BY " + orderBy + " " + order + ", sl_no ASC LIMIT " + startIndex + ","
+					+ recordsPerPage;
 			pst = con.prepareStatement(query);
 
 			ResultSet rs = pst.executeQuery(query);
-			Map<String,Object> objectMap = new HashMap<>();
+			Map<String, Object> objectMap = new HashMap<>();
 			ArrayList<MainPojo> pojoArray = new ArrayList<MainPojo>();
 			while (rs.next()) {
 				MainPojo pojo = new MainPojo();
@@ -93,20 +101,20 @@ public class advanceSearchRecord extends HttpServlet {
 				pojoArray.add(pojo);
 			}
 			objectMap.put("advanceSearch", pojoArray);
-			query1 = "SELECT COUNT(*) AS count FROM " + dbCredentials.getTableName() + " WHERE ( " + doc_id + " IS NULL OR doc_id LIKE '%"
-					+ doc_id + "%') AND ( " + cust_number + " IS NULL OR cust_number LIKE '%" + cust_number
-					+ "%') AND ( " + invoice_id + " IS NULL OR invoice_id LIKE '%" + invoice_id + "%') AND ( "
-					+ buisness_year + " IS NULL OR buisness_year LIKE '%" + buisness_year
-					+ "%') AND is_deleted = 0 ";
-			
+			query1 = "SELECT COUNT(*) AS count FROM " + dbCredentials.getTableName() + " WHERE ( " + doc_id
+					+ " IS NULL OR doc_id LIKE '%" + doc_id + "%') AND ( " + cust_number
+					+ " IS NULL OR cust_number LIKE '%" + cust_number + "%') AND ( " + invoice_id
+					+ " IS NULL OR invoice_id LIKE '%" + invoice_id + "%') AND ( " + buisness_year
+					+ " IS NULL OR buisness_year LIKE '%" + buisness_year + "%') AND is_deleted = 0 ";
+
 			pst = con.prepareStatement(query1);
 			rs = pst.executeQuery(query1);
 			rs.next();
 			totalCount tc = new totalCount();
 			tc.count = rs.getInt("count");
 			objectMap.put("count", tc);
-			
-			Gson gson = new Gson(); 
+
+			Gson gson = new Gson();
 			String jsonData = gson.toJson(objectMap);
 
 			res.setContentType("application/json");
