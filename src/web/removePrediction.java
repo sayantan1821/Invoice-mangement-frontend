@@ -27,8 +27,6 @@ public class removePrediction extends HttpServlet {
 
 	public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
 		servletCOR.setAccessControlHeaders(res);
-		String doc_id = req.getParameter("doc_id");
-		String aging_bucket = req.getParameter("aging_bucket");
 		String query = null;
 
 		PrintWriter out = res.getWriter();

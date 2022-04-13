@@ -1,4 +1,4 @@
-package web;
+package pojo;
 
 public class MainPojo {
 	private int sl_no;
